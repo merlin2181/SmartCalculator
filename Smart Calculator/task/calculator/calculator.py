@@ -5,6 +5,9 @@ class Calculator:
     def __init__(self):
         self.numbers = None
         self.flag = None
+        self.help = 'This program calculates the sum of numbers you enter\n' \
+                    '"/exit" will quit the program\n' \
+                    '"/help" brings up this text.\n'
 
     def main(self):
         """
@@ -12,11 +15,15 @@ class Calculator:
         """
         while True:
             self.flag = True
-            self.numbers = input('Please enter two numbers or "/exit" to quit:\n').split()
+            self.numbers = input('Enter numbers: ').split()
             for input_ in self.numbers:
                 if input_ == '/exit':
                     print('Bye!')
                     sys.exit()
+                if input_ == '/help':
+                    print(self.help)
+                    self.flag = False
+                    break
                 # Makes sure the user enters numbers (1, 823, 7732, etc.) not text
                 try:
                     int(input_)
