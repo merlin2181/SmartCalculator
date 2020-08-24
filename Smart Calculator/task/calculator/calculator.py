@@ -10,33 +10,65 @@ class Calculator:
                     '-9 + 10 - 34 - -44\n' \
                     'a double negative "--" will turn into "+"\n' \
                     'example: -4 -- 4 -- -5 will be converted into: -4 + 4 + -5\n' \
-                    'if you enter your equation without spaces, the program will just return it.\n' \
+                    'if you enter your equation without spaces, the program will print "Invalid expression" error.\n' \
                     '"/exit" will quit the program\n' \
                     '"/help" brings up this text.\n'
 
     def main(self):
         """
-        Main method that runs the calculator. It currently prints the sum of user inputted numbers.
+        Main method that runs the calculator. It currently prints the total of user inputted numbers.
         """
         while True:
-            flag = True
             self.numbers = input().split()
-            for input_ in self.numbers:
-                if input_ == '/exit':
-                    print('Bye!')
-                    sys.exit()
-                if input_ == '/help':
-                    print(self.help)
-                    flag = False
-                    break
-            if flag:
-                if len(self.numbers) == 0:
-                    continue
-                if len(self.numbers) == 1:
-                    print(self.numbers[0])
-                else:
-                    self.parse_input()
+            if self.check_input():
+                self.parse_input()
+                if self.check_parsed_input():
                     self.calculate()
+
+    def check_input(self):
+        """
+        Method that initially checks the user input to see if a command was entered or the correct
+        input was entered
+        """
+        if len(self.numbers) == 0:
+            return False
+        elif self.numbers[0] == '/exit':
+            print('Bye!')
+            sys.exit()
+        elif self.numbers[0] == '/help':
+            print(self.help)
+            return False
+        elif self.numbers[0].startswith("/"):
+            print('Unknown command')
+            return False
+        elif len(self.numbers) == 1:
+            try:
+                print(int(self.numbers[0]))
+            except (ValueError, SyntaxError):
+                print('Invalid expression')
+            finally:
+                return False
+        return True
+
+    def check_parsed_input(self):
+        """
+        Method that checks that the user entered equation is syntactically correct
+        """
+        if '-' not in self.numbers and '+' not in self.numbers:
+            print('Invalid expression')
+            return False
+        if len(self.numbers) % 2 == 1:
+            for i, item in enumerate(self.numbers):
+                if i % 2 == 0:
+                    if type(item) == int:
+                        continue
+                    else:
+                        print('Invalid expression')
+                        return False
+        else:
+            print('Invalid expression')
+            return False
+        return True
 
     def parse_input(self):
         """
